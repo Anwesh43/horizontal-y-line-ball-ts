@@ -14,6 +14,7 @@ const colors : Array<string> = [
     "#2196F3"
 ]
 const delay : number = 20
+const deg : number = Math.PI / 4
 
 
 class ScaleUtil {
@@ -103,5 +104,59 @@ class Animator {
             this.animated = false 
             clearInterval(this.interval)
         }
+    }
+}
+
+class DrawingUtil {
+
+    static drawLine(context : CanvasRenderingContext2D, x1 : number, y1 : number, x2 : number, y2 : number) {
+        context.beginPath()
+        context.moveTo(x1, y1)
+        context.lineTo(x2, y2)
+        context.stroke()
+    }
+
+    static drawCircle(context : CanvasRenderingContext2D, x : number, y : number, r : number) {
+        context.beginPath()
+        context.arc(x, y, r, 0, 2 * Math.PI)
+        context.fill()
+    }
+
+    static drawHorizontalYLineBall(context : CanvasRenderingContext2D, scale : number) {
+        const size : number = Math.min(w, h) / lineFactor 
+        const r : number = Math.min(w, h) / rFactor
+        const sf : number = ScaleUtil.sinify(scale)
+        const sf1 : number = ScaleUtil.divideScale(sf, 0, parts)
+        const sf2 : number = ScaleUtil.divideScale(sf, 1, parts)
+        const sf3 : number = ScaleUtil.divideScale(sf, 2, parts)
+        const sf4 : number = ScaleUtil.divideScale(sf, 3, parts)
+        const sf5 : number = ScaleUtil.divideScale(sf, 4, parts) 
+        context.save()
+        context.translate(w / 2 - size, h / 2)
+        DrawingUtil.drawLine(context, 0, 0, size * sf1, 0)
+    
+        for (var j = 0; j < 2; j++) {
+            context.save()
+            context.translate(size, 0)
+            context.rotate(deg * (1 - 2 * j))
+            DrawingUtil.drawLine(context, 0, 0, size * sf2, 0)
+            context.restore()
+        }
+        for (var j = 0; j < 2; j++) {
+            context.save()
+            context.translate(size * Math.floor(sf4), 0)
+            context.rotate(deg * (1 - 2 * j) * Math.floor(sf4))
+            DrawingUtil.drawCircle(context, size * (sf5 + sf4 * (1 - Math.floor(sf4))), 0, r * sf3)
+            context.restore()
+        }
+        context.restore()
+    }
+    
+    static drawHYLBNode(context : CanvasRenderingContext2D, i : number, scale : number) {
+        context.strokeStyle = colors[i]
+        context.fillStyle = colors[i]
+        context.lineCap = 'round'
+        context.lineWidth = Math.min(w, h) / strokeFactor 
+        DrawingUtil.drawHorizontalYLineBall(context, scale)
     }
 }
