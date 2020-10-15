@@ -225,3 +225,26 @@ class HorizontalYLineBall {
         this.curr.startUpdating(cb)
     }
 }
+
+class Renderer {
+
+    hylb : HorizontalYLineBall = new HorizontalYLineBall()
+    animator : Animator = new Animator()
+
+    render(context : CanvasRenderingContext2D) {
+        this.hylb.draw(context)
+    }
+
+    handleTap(cb : Function) {
+        this.hylb.startUpdating(() => {
+            this.animator.start(() => {
+                cb()
+                this.hylb.update(() => {
+                    this.animator.stop()
+                    cb()
+                })
+            })
+        })
+    }
+
+}
