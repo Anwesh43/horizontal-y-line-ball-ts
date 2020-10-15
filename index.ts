@@ -4,7 +4,7 @@ const parts : number = 5
 const scGap : number = 0.02 / parts 
 const strokeFactor : number = 90 
 const lineFactor : number = 3 
-const rFactor : number = 8.6 
+const rFactor : number = 13.8
 const backColor : string = "#bdbdbd"
 const colors : Array<string> = [
     "#F44336",
@@ -114,6 +114,9 @@ class Animator {
 class DrawingUtil {
 
     static drawLine(context : CanvasRenderingContext2D, x1 : number, y1 : number, x2 : number, y2 : number) {
+        if (x1 == x2 && y1 == y2) {
+            return
+        }
         context.beginPath()
         context.moveTo(x1, y1)
         context.lineTo(x2, y2)
